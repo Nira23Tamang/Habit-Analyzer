@@ -479,6 +479,7 @@ int Login_Account_Features::View_User_Task(Login_Account& LA, Audio& A)
     }
 
     stringstream ss(LA.temp);
+    
     loop_counter = 0;
     string array_of_task[menu_list_counter]; // arrays of string
 
@@ -523,7 +524,7 @@ string Login_Account_Features:: User_Journal_Menu_List(string array[], int num)
         {
             gotoxy(X_coordinates, Y_coordinates + (i * 2));
             setColor(Set[i]);
-            cout << array[i];
+            cout << (i + 1) << ". "<< array[i];
         }
 
         key = _getch();  // Get user input

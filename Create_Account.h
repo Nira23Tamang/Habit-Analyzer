@@ -53,6 +53,7 @@ int Create_Account::Get_Details()
 {
     cout << "\n\nBasic Details\n\n";
     cout << "Name: ";
+    cin.ignore();
     getline(cin, name);
     cout << "\n\n";
 
