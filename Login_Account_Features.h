@@ -584,7 +584,6 @@ int Login_Account_Features::Task_Status_Report(Login_Account& LA, Audio& A)
         Sleep(1500);
         return 0;
     }
-
     getline(task_status, LA.temp); // read user habitual task
 
     // Determining how many bars do we need
@@ -596,6 +595,31 @@ int Login_Account_Features::Task_Status_Report(Login_Account& LA, Audio& A)
         cout << "\n\nUser Don't Have Any Daily Habitual Task\n\n";
         Sleep(1500);
         return 0;
+    }
+    else
+    {
+        getline(task_status, LA.temp); // read user habitual task
+        task_status.seekg(0, ios::beg);
+        loop_counter = 0;
+        while(getline(task_status, LA.name))
+        {
+            loop_counter ++;
+            if(loop_counter > 1)
+            {
+                break;
+            }
+        }
+        
+        task_status.seekg(0, ios::beg);
+        getline(task_status, LA.temp); // read user habitual task
+        if(loop_counter <= 1)
+        {
+            system("cls");
+            cout << "\n\nUser don't have updated any daily habitual task\n\n";
+            Sleep(2000);
+            system("cls");
+            return 0;
+        }
     }
 
     // To name bars
@@ -619,27 +643,27 @@ int Login_Account_Features::Task_Status_Report(Login_Account& LA, Audio& A)
     loop_counter = 0;
 
     // To get all number of rows for life time menu selection
-    string report_menu[5] = { "1 Month", "3 Month", "6 Month", "1 Year", "Life Time" };
+    string report_menu[5] = { "One Month", "Three Month", "Six Month", "One Year", "Till Date" };
     user_journal_list_slection = User_Journal_Menu_List(report_menu, 5);
     int bar_height[menu_list_counter];
 
-    if (user_journal_list_slection == "1 Month") 
+    if (user_journal_list_slection == "One Month") 
     {
         temp_counter = 30;
     } 
-    else if (user_journal_list_slection == "3 Month") 
+    else if (user_journal_list_slection == "Three Month") 
     {
         temp_counter = 90;
     } 
-    else if (user_journal_list_slection == "6 Month") 
+    else if (user_journal_list_slection == "Six Month") 
     {
         temp_counter = 180;
     } 
-    else if (user_journal_list_slection == "1 Year") 
+    else if (user_journal_list_slection == "One Year") 
     {
         temp_counter = 365;
     } 
-    else if (user_journal_list_slection == "Life Time") 
+    else if (user_journal_list_slection == "Till Date") 
     {
         loop_counter = 0;
 
