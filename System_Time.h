@@ -10,10 +10,10 @@ class System_Time
  public:
     System_Time(){ }
 
-    string& Current_Time(string& curr_time);
+    string& current_time(string& curr_time);
 };
 
-string& System_Time:: Current_Time(string& curr_time)
+string& System_Time:: current_time(string& curr_time)
 {
         // Get the current time
         time_t currentTime = time(nullptr);

@@ -6,14 +6,14 @@ class Login_Menu_Option
  public:
     Login_Menu_Option() { }
 
-    int Login_Menu_List(Audio& A);
+    int login_menu_list(Audio& A);
 
     friend class Audio;
 
     ~Login_Menu_Option() { } // Login_Menu_List Destructor
 };
 
-int Login_Menu_Option::Login_Menu_List(Audio& A)
+int Login_Menu_Option::login_menu_list(Audio& A)
 {
     const int DEFAULT_COLOR = 7;
     const int HIGHLIGHT_COLOR = 2;
@@ -69,7 +69,7 @@ int Login_Menu_Option::Login_Menu_List(Audio& A)
             }
         } 
         else if (key == 13) 
-        {   A.Play_Sound_Only("Audio\\Enter.wav");
+        {   A.play_sound_only("Audio\\Enter.wav");
             // Enter key (carriage return)
             color(7);
             switch (counter)

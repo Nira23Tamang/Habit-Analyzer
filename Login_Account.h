@@ -21,23 +21,23 @@ class Login_Account : public Create_Account  // Handle only allowing to enter to
 
     Login_Account() {}
 
-    void Get_User_ID();
+    void get_user_id();
 
-    int User_ID_Check();
+    int user_id_check();
 
-    int User_Password_Check();
+    int user_password_check();
 
-    string Return_Password();
+    string return_password();
 
-    int Reset_Password();
+    int reset_password();
     
 };
-void Login_Account::  Get_User_ID()
+void Login_Account::  get_user_id()
 {
         cout << "\n\nUser ID: ";
         cin >> User_ID;
 }
-int Login_Account:: User_ID_Check()
+int Login_Account:: user_id_check()
 {
         temp = "User_ID_List.csv";
         ifstream myfile(temp.c_str());
@@ -71,10 +71,10 @@ int Login_Account:: User_ID_Check()
         }
         return 1;
 }
-int Login_Account:: User_Password_Check()
+int Login_Account:: user_password_check()
 {
         cout << "\n\nPassword: ";
-        Get_Password(password);
+        get_password(password);
 
         temp = User_ID + "\\" + User_ID + "_Details.csv";
         ifstream myfile(temp.c_str());
@@ -116,11 +116,11 @@ int Login_Account:: User_Password_Check()
         return 0;
         
 }
-string Login_Account:: Return_Password()
+string Login_Account:: return_password()
 {
     return storedPassword;
 }
-int Login_Account:: Reset_Password()
+int Login_Account:: reset_password()
 {
         temp.clear();
         temp = User_ID + "\\" + User_ID + "_Security.csv";
@@ -175,7 +175,7 @@ int Login_Account:: Reset_Password()
                     if (compare == 2)
                     {
                         cout << "\n\nNew ";
-                        str_line = Get_Password_Data();
+                        str_line = get_password_data();
                         encrypt(str_line);
                         name.clear();
                         name = name + "Password:" + "," + str_line + ",";

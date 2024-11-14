@@ -16,13 +16,13 @@ class Password_Security
         password = pas;
     }
 
-    void Get_Password(string& password);
+    void get_password(string& password);
 
-    string Get_Password_Data();
+    string get_password_data();
 
     bool security();
 };
-void Password_Security:: Get_Password(string& password)
+void Password_Security:: get_password(string& password)
 {
         char ch;
         password.clear();
@@ -49,15 +49,15 @@ void Password_Security:: Get_Password(string& password)
             }
         }
 }
-string Password_Security:: Get_Password_Data()
+string Password_Security:: get_password_data()
 {
          pass_mark: // Mark
         cout << "Password: ";
-        Get_Password(password);
+        get_password(password);
 
         if (!security())
         {
-            cout << "\nYou Entered a Weak Password\n\n";
+            cout << "\nPassword is weak\n\n";
             goto pass_mark;
         }
         else

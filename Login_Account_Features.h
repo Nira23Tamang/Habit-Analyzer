@@ -15,30 +15,30 @@ class Login_Account_Features : public Login_Account, public System_Time
  public:
     Login_Account_Features() {}
 
-    int Count_Return(string& data1);
+    int count_return(string& data1);
 
-    int Add_New_Task(Login_Account& LA, Audio& A);
+    int add_new_task(Login_Account& LA, Audio& A);
 
-    int Update_Journal_Status(Login_Account& LA, Audio& A);
+    int update_journal_status(Login_Account& LA, Audio& A);
 
-    int View_User_Task(Login_Account& LA, Audio& A);
+    int view_user_task(Login_Account& LA, Audio& A);
 
-    string User_Journal_Menu_List(string array[], int num);
+    string user_journal_menu_list(string array[], int num);
 
-    int Delete_User_Task(Login_Account& LA, Audio& A);
+    int delete_user_task(Login_Account& LA, Audio& A);
 
-    int Task_Status_Report(Login_Account& LA, Audio& A);
+    int task_status_report(Login_Account& LA, Audio& A);
 
-    bool Check_Length(string sample);
+    bool check_length(string sample);
 
-    int Report_Graph(int heights[], string labels[], int numBars);
+    int report_graph(int heights[], string labels[], int numBars);
     
-    int Delete_Account(Login_Account& LA, Audio& A);
+    int delete_account(Login_Account& LA, Audio& A);
 
     ~Login_Account_Features() { } // Destructor of Login_Account_Features
 };
 
-int Login_Account_Features::Report_Graph(int heights[], string labels[], int numBars)
+int Login_Account_Features::report_graph(int heights[], string labels[], int numBars)
 {
     // Initialize the graphics mode
     int gd = DETECT, gm;
@@ -100,7 +100,7 @@ int Login_Account_Features::Report_Graph(int heights[], string labels[], int num
     return 1;
 }
 
-bool Login_Account_Features::Check_Length(string sample)
+bool Login_Account_Features::check_length(string sample)
 {
     if (strlen(sample.c_str()) <= 7)
     {
@@ -114,7 +114,7 @@ bool Login_Account_Features::Check_Length(string sample)
         return false;
     }
 }
-int Login_Account_Features:: Update_Journal_Status(Login_Account& LA, Audio& A) 
+int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A) 
 {
     LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
     fstream journal_status(LA.temp.c_str(), ios::in | ios::out);
@@ -128,7 +128,7 @@ int Login_Account_Features:: Update_Journal_Status(Login_Account& LA, Audio& A)
     journal_status.seekg(0, ios::beg);  // sets pointer to the first
     LA.temp.clear();
     getline(journal_status, LA.temp); // read user habitual task
-    menu_list_counter = Count_Return(LA.temp);  // Number of Task in Journal
+    menu_list_counter = count_return(LA.temp);  // Number of Task in Journal
     if (menu_list_counter == 0) {
         cout << "\n\nUser Don't Have Any Daily Habitual Task\n\n";
         
@@ -137,7 +137,7 @@ int Login_Account_Features:: Update_Journal_Status(Login_Account& LA, Audio& A)
     journal_status.clear();
     journal_status.seekg(-(11 + (2 * menu_list_counter)), ios::end);
     getline(journal_status, file_time, ','); // getting current time from system
-    system_time = Current_Time(system_time);
+    system_time = current_time(system_time);
     if (file_time == system_time) 
     {
         loop_counter = 0; loop_counter_2 = 0, num_zero = 0;  // assigning all counters zero
@@ -181,7 +181,7 @@ int Login_Account_Features:: Update_Journal_Status(Login_Account& LA, Audio& A)
             loop_counter++;
         }
         // show menu of above new array
-        user_journal_list_slection = User_Journal_Menu_List(array_of_task_2, loop_counter_2);
+        user_journal_list_slection = user_journal_menu_list(array_of_task_2, loop_counter_2);
         if (user_journal_list_slection == "eight") 
         {
             return -1;
@@ -221,7 +221,7 @@ int Login_Account_Features:: Update_Journal_Status(Login_Account& LA, Audio& A)
                 array_of_task[loop_counter] = LA.name;  // Store token in the array
                 loop_counter++;  // Increment the count
             }
-            user_journal_list_slection = User_Journal_Menu_List(array_of_task, menu_list_counter);
+            user_journal_list_slection = user_journal_menu_list(array_of_task, menu_list_counter);
             if (user_journal_list_slection == "eight") 
             {
                 return -1;
@@ -240,11 +240,11 @@ int Login_Account_Features:: Update_Journal_Status(Login_Account& LA, Audio& A)
         }
     }
     journal_status.close();
-    A.Play_Sound_Progress_Bar("Audio\\Update.wav", "Updating Task...");
+    A.play_sound_progress_bar("Audio\\Update.wav", "Updating Task...");
     return 1;
 }
 
-int Login_Account_Features::Count_Return(string& data1) 
+int Login_Account_Features::count_return(string& data1) 
 {
     vector<string> array1;
     stringstream ss(data1);
@@ -262,7 +262,7 @@ int Login_Account_Features::Count_Return(string& data1)
     return (array1.size());
 }
 
-int Login_Account_Features::Add_New_Task(Login_Account& LA, Audio& A) 
+int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A) 
 {
     string new_task;
     LA.temp.clear();
@@ -293,7 +293,7 @@ int Login_Account_Features::Add_New_Task(Login_Account& LA, Audio& A)
             bool_label: // label statement
             my_add_new_task.clear();
             my_add_new_task.seekp(0, ios::end);
-            LA.compare = Count_Return(LA.temp);
+            LA.compare = count_return(LA.temp);
             
             switch (LA.compare) 
             {
@@ -319,7 +319,7 @@ int Login_Account_Features::Add_New_Task(Login_Account& LA, Audio& A)
             }
             
             cin >> new_task;
-            b1 = Check_Length(new_task);
+            b1 = check_length(new_task);
             
             if (b1 == false) 
             {
@@ -336,7 +336,7 @@ int Login_Account_Features::Add_New_Task(Login_Account& LA, Audio& A)
             my_add_new_task.clear();
             my_add_new_task.seekg(0, ios::beg);
             getline(my_add_new_task, LA.temp);
-            LA.compare = Count_Return(LA.temp);
+            LA.compare = count_return(LA.temp);
             
             switch (LA.compare) 
             {
@@ -371,7 +371,7 @@ int Login_Account_Features::Add_New_Task(Login_Account& LA, Audio& A)
                     }
                     
                     cin >> new_task;
-                    b1 = Check_Length(new_task);
+                    b1 = check_length(new_task);
                     
                     if (b1 == false) 
                     {
@@ -447,12 +447,12 @@ int Login_Account_Features::Add_New_Task(Login_Account& LA, Audio& A)
         }
         
     }
-     A.Play_Sound_Progress_Bar("Audio\\Add.wav", "Adding " + (new_task) + " Task...");
+     A.play_sound_progress_bar("Audio\\Add.wav", "Adding " + (new_task) + " Task...");
      return 1;
 }
-int Login_Account_Features::View_User_Task(Login_Account& LA, Audio& A) 
+int Login_Account_Features::view_user_task(Login_Account& LA, Audio& A) 
 {
-    A.Play_Sound_Progress_Bar("Audio\\View.wav", "Viewing Task List...");
+    A.play_sound_progress_bar("Audio\\View.wav", "Viewing Task List...");
     LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
     fstream journal_status(LA.temp.c_str(), ios::in);
 
@@ -467,7 +467,7 @@ int Login_Account_Features::View_User_Task(Login_Account& LA, Audio& A)
     journal_status.seekg(0, ios::beg);  // sets pointer to the first
     LA.temp.clear();
     getline(journal_status, LA.temp); // read user habitual task
-    menu_list_counter = Count_Return(LA.temp);  // Number of Task in Journal
+    menu_list_counter = count_return(LA.temp);  // Number of Task in Journal
 
     if (menu_list_counter == 0) 
     {
@@ -495,13 +495,13 @@ int Login_Account_Features::View_User_Task(Login_Account& LA, Audio& A)
 
     do 
     {
-        user_journal_list_slection = User_Journal_Menu_List(array_of_task, loop_counter);
+        user_journal_list_slection = user_journal_menu_list(array_of_task, loop_counter);
     } while (user_journal_list_slection == "Eight");
-    A.Play_Sound_Only("Audio\\Back.wav");
+    A.play_sound_only("Audio\\Back.wav");
     return 1;
 }
 
-string Login_Account_Features:: User_Journal_Menu_List(string array[], int num) 
+string Login_Account_Features:: user_journal_menu_list(string array[], int num) 
 {
     const int DEFAULT_COLOR = 7;
     int Set[num];
@@ -571,7 +571,7 @@ string Login_Account_Features:: User_Journal_Menu_List(string array[], int num)
     }
 }
 
-int Login_Account_Features::Task_Status_Report(Login_Account& LA, Audio& A)
+int Login_Account_Features::task_status_report(Login_Account& LA, Audio& A)
 {
     LA.temp.clear();
     LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
@@ -587,7 +587,7 @@ int Login_Account_Features::Task_Status_Report(Login_Account& LA, Audio& A)
     getline(task_status, LA.temp); // read user habitual task
 
     // Determining how many bars do we need
-    menu_list_counter = Count_Return(LA.temp);  // Number of Task in Journal
+    menu_list_counter = count_return(LA.temp);  // Number of Task in Journal
 
     if (menu_list_counter == 0) 
     {
@@ -644,7 +644,7 @@ int Login_Account_Features::Task_Status_Report(Login_Account& LA, Audio& A)
 
     // To get all number of rows for life time menu selection
     string report_menu[5] = { "One Month", "Three Month", "Six Month", "One Year", "Till Date" };
-    user_journal_list_slection = User_Journal_Menu_List(report_menu, 5);
+    user_journal_list_slection = user_journal_menu_list(report_menu, 5);
     int bar_height[menu_list_counter];
 
     if (user_journal_list_slection == "One Month") 
@@ -751,15 +751,15 @@ int Login_Account_Features::Task_Status_Report(Login_Account& LA, Audio& A)
         
         return 0;
     }
-    A.Play_Sound_Progress_Bar("Audio\\Report.wav", ("Preparing " + (user_journal_list_slection) + " Report Graph...") );
-    int report_status = Report_Graph(bar_height, bars_name, menu_list_counter);
+    A.play_sound_progress_bar("Audio\\Report.wav", ("Preparing " + (user_journal_list_slection) + " Report Graph...") );
+    int report_status = report_graph(bar_height, bars_name, menu_list_counter);
     if (report_status == 1) 
     {
         return 1;
     } 
     return 0;
 }
-int Login_Account_Features:: Delete_Account(Login_Account& LA, Audio& A)
+int Login_Account_Features:: delete_account(Login_Account& LA, Audio& A)
 {
     system("cls");
     LA.temp.clear();
@@ -809,10 +809,10 @@ int Login_Account_Features:: Delete_Account(Login_Account& LA, Audio& A)
     LA.temp = LA.temp + "rmdir /S /Q " + LA.User_ID ;
     system(LA.temp.c_str());
     LA.decrypt(LA.User_ID);
-    A.Play_Sound_Progress_Bar("Audio\\Error_2.wav", "Deleting "+ (LA.User_ID) + " Account...");
+    A.play_sound_progress_bar("Audio\\Error_2.wav", "Deleting "+ (LA.User_ID) + " Account...");
     return 1;
 }
-int Login_Account_Features::Delete_User_Task(Login_Account& LA, Audio& A)
+int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
 {
     LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
     fstream journal_status(LA.temp.c_str(), ios::in);
@@ -828,7 +828,7 @@ int Login_Account_Features::Delete_User_Task(Login_Account& LA, Audio& A)
     journal_status.seekg(0, ios::beg);  // sets pointer to the first
     LA.temp.clear();
     getline(journal_status, LA.temp);  // read user habitual task
-    menu_list_counter = Count_Return(LA.temp);  // Number of Task in Journal
+    menu_list_counter = count_return(LA.temp);  // Number of Task in Journal
 
     if (menu_list_counter == 0)
     {
@@ -860,7 +860,7 @@ int Login_Account_Features::Delete_User_Task(Login_Account& LA, Audio& A)
         return 0;
     }
 
-    user_journal_list_slection = User_Journal_Menu_List(array_of_task, loop_counter);
+    user_journal_list_slection = user_journal_menu_list(array_of_task, loop_counter);
 
     if (user_journal_list_slection == "eight")
     {
@@ -997,7 +997,7 @@ int Login_Account_Features::Delete_User_Task(Login_Account& LA, Audio& A)
             }
         }
     }
-    A.Play_Sound_Progress_Bar("Audio\\Delete.wav", "Deleting " + user_journal_list_slection + " Task...");
+    A.play_sound_progress_bar("Audio\\Delete.wav", "Deleting " + user_journal_list_slection + " Task...");
     return 1;
 }
 #endif // end of declaration

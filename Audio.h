@@ -4,11 +4,11 @@
 class Sound
 {
     public:
-    Audio() { }  // Constructor
+    Sound() { }  // Constructor
 
-    virtual void Play_Sound_Only( string mp3) = 0 ;// Plays Audio Only
+    virtual void play_sound_only( string mp3) = 0 ;// Plays Audio Only
 
-    virtual void Play_Sound_Progress_Bar(string mp3, string message) = 0; // Plays Audio and Display Progress Bar
+    virtual void play_sound_progress_bar(string mp3, string message) = 0; // Plays Audio and Display Progress Bar
 
     
 };
@@ -17,19 +17,20 @@ class Audio : public Sound
     public:
     Audio() { }  // Constructor
 
-    void Play_Sound_Only(string mp3) ; // Plays Audio Only
+    void play_sound_only(string mp3) ; // Plays Audio Only
 
-    void Play_Sound_Progress_Bar(string mp3, string message); // Plays Audio and Display Progress Bar
+    void play_sound_progress_bar(string mp3, string message); // Plays Audio and Display Progress Bar
 
     friend class Login_Account_Features ;// making  login_account_features friend class of Sound classs
 
+    ~Audio() { } // destructor
 };
-void Audio:: Play_Sound_Only( string mp3)
+void Audio:: play_sound_only( string mp3)
 {
     PlaySound(TEXT( mp3.c_str() ),NULL,SND_ASYNC);
     
 }
-void Audio:: Play_Sound_Progress_Bar( string mp3, string message)
+void Audio:: play_sound_progress_bar( string mp3, string message)
 {
     system("cls");
     

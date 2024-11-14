@@ -28,28 +28,28 @@ class Create_Account : public Password_Security, public Encryption_and_Decryptio
     }
 
     // Function to get user details
-    int Get_Details();
+    int get_details();
     
     // Function to create and open individual details file
-    int Individual_Details_File();
+    int individual_details_file();
 
     // Function to create and open the user's Excel file for journal
-    int Opening_User_Excel_File();
+    int opening_user_excel_file();
 
     // Function to get security details
-    int Get_Security_Details();
+    int get_security_details();
 
     // Open user all file
-    int Open_File();
+    int open_file();
     // Function to check whether all file opened or not
-    static int Account_Check();
+    static int account_check();
 
     ~Create_Account(){ }// Create Account Destructor
 };
 
 int Create_Account::file_count;
 
-int Create_Account::Get_Details()
+int Create_Account::get_details()
 {
     cout << "\n\nBasic Details\n\n";
     cout << "Name: ";
@@ -97,14 +97,14 @@ int Create_Account::Get_Details()
     // Password Input From User
     cin.ignore();
     password.clear();
-    password = Get_Password_Data();
+    password = get_password_data();
     system("cls");
 
     return 1;
 }
 
 // Creating user individual csv file having name, user id and password
-int Create_Account::Individual_Details_File()
+int Create_Account::individual_details_file()
 { 
     // Don’t require to encrypt User_ID
 
@@ -132,7 +132,7 @@ int Create_Account::Individual_Details_File()
 }
 
 // Function to create and open the user's Excel file
-int Create_Account::Opening_User_Excel_File()
+int Create_Account::opening_user_excel_file()
 {
 
     encrypt(User_ID);
@@ -151,7 +151,7 @@ int Create_Account::Opening_User_Excel_File()
 }
 
 // Function to get user security details
-int Create_Account::Get_Security_Details()
+int Create_Account::get_security_details()
 {
     encrypt(User_ID);
 
@@ -182,7 +182,7 @@ int Create_Account::Get_Security_Details()
     system("cls");
     return 1;
 }
-int Create_Account:: Open_File()
+int Create_Account:: open_file()
 {
     file_count = 0;
     for(int i=0; i<4; i++)
@@ -263,7 +263,7 @@ int Create_Account:: Open_File()
     }
     return file_count;
 }
-int Create_Account:: Account_Check()
+int Create_Account:: account_check()
 {
     system("cls");
     try
