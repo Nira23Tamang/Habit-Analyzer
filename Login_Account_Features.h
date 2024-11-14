@@ -294,29 +294,18 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
             my_add_new_task.clear();
             my_add_new_task.seekp(0, ios::end);
             LA.compare = count_return(LA.temp);
-            
-            switch (LA.compare) 
+            LA.compare += 1;
+            if(LA.compare < 5)
             {
-                case 0:
-                    cout << "\n1st Habitual Task: ";
-                    break;
-                case 1:
-                    cout << "\n2nd Habitual Task: ";
-                    break;
-                case 2:
-                    cout << "\n3rd Habitual Task: ";
-                    break;
-                case 3:
-                    cout << "\n4th Habitual Task: ";
-                    break;
-                case 4:
-                    cout << "\n5th Habitual Task: ";
-                    break;
-                default:
-                    cout << "\n\nYou Cannot Keep More than 5 Daily Habitual Task at a Time\n\n";
-                    Sleep(2000);
-                    return 0;
+                cout << endl << LA.compare << ". Habitual Task: ";
             }
+            else
+            {
+                cout << "\n\nYou Cannot Keep More than 5 Daily Habitual Task at a Time\n\n";
+                 Sleep(2000);
+                return 0;
+            }
+            
             
             cin >> new_task;
             b1 = check_length(new_task);
