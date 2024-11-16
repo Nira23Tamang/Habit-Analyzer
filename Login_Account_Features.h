@@ -1,10 +1,8 @@
 #ifndef LOGIN_ACCOUNT_FEATURES
 #define LOGIN_ACCOUNT_FEATURES
 #include <graphics.h>
-#include <sstream>
 #include "System_Time.h"
 #include <conio.h> 
-#include <cstring> 
 
 class Login_Account_Features : public Login_Account, public System_Time
 {
@@ -61,6 +59,22 @@ int Login_Account_Features::report_graph(int heights[], string labels[], int num
     // Draw X and Y axes
     line(60, 430, 60, 20);    // Y-axis
     line(40, 410, 620, 410);  // X-axis
+
+    // Draws percentage mark
+    line(50, 348, 70, 348);
+    outtextxy(25, 340, "20");
+
+    line(50, 286, 70, 286);
+    outtextxy(25, 278, "40");
+
+    line(50, 224, 70, 224);
+    outtextxy(25, 216, "60");
+
+    line(50, 162, 70, 162);
+    outtextxy(25, 154, "80");
+
+    line(50, 100, 70, 100);
+    outtextxy(10, 92, "100");
 
     // Draw axis arrows
     line(60, 20, 55, 25);    // Y-axis

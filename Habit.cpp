@@ -156,6 +156,7 @@ int main()
             }
             else
             {
+                Create_Account CA_1;
                 again_enter_pass: // label from again_enter_pass
                 system("cls");
                 A.play_sound_only("Audio\\Error_1.wav");
@@ -200,7 +201,8 @@ int main()
                 else
                 {
                     cout << "Re-Type Password: ";
-                    cin >> temp_password;
+                    CA_1.get_password(temp_password);
+                    //cin >> temp_password;
                     if (temp_password == LA.return_password())
                     {
                         // goto login menu label
