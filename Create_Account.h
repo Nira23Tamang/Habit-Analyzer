@@ -3,8 +3,7 @@
 
 #include <cstdlib>
 #include <fstream>
-#include <cctype>
-#include <cstring>
+
 using namespace std;
 
 class Create_Account : public Password_Security, public Encryption_and_Decryption, public Audio

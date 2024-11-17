@@ -1,9 +1,7 @@
 #ifndef SYSTEM_TIME
 #define SYSTEM_TIME
 
-#include <ctime>
 #include <iomanip>
-#include <sstream>
 
 class System_Time
 {

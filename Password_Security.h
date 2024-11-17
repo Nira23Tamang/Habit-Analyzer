@@ -1,7 +1,6 @@
 #ifndef PASSWORD_SECURITY
 #define PASSWORD_SECURITY
 
-#include <cstring>
 #include <vector>
 
 class Password_Security

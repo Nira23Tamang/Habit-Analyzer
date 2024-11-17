@@ -1,9 +1,7 @@
 #ifndef LOGIN_ACCOUNT_FEATURES
 #define LOGIN_ACCOUNT_FEATURES
-#include <graphics.h>
 #include "System_Time.h"
-#include <conio.h> 
-
+#include <graphics.h>
 class Login_Account_Features : public Login_Account, public System_Time
 {
  protected:
