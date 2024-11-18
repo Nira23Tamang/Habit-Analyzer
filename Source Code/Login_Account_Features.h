@@ -1,12 +1,15 @@
 #ifndef LOGIN_ACCOUNT_FEATURES
 #define LOGIN_ACCOUNT_FEATURES
+
 #include "System_Time.h"
+
 #include <graphics.h>
 class Login_Account_Features : public Login_Account, public System_Time
 {
  protected:
     int menu_list_counter = 0, loop_counter = 0, loop_counter_2 = 0, num_zero = 0, temp_counter = 0;  // for counting loop and number of zeros
     string system_time, file_time, user_journal_list_slection;
+    char key;
 
  public:
     Login_Account_Features() {}
@@ -30,6 +33,8 @@ class Login_Account_Features : public Login_Account, public System_Time
     int report_graph(int heights[], string labels[], int numBars);
     
     int delete_account(Login_Account& LA, Audio& A);
+    
+    int delete_create_date(Login_Account& LA, int new_task_num, int unique_task_num);
 
     ~Login_Account_Features() { } // Destructor of Login_Account_Features
 };
@@ -307,7 +312,7 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
             my_add_new_task.seekp(0, ios::end);
             LA.compare = count_return(LA.temp);
             LA.compare += 1;
-            if(LA.compare < 5)
+            if(LA.compare <= 5)
             {
                 cout << endl << LA.compare << ". Habitual Task: ";
             }
@@ -328,6 +333,27 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
             }
             
             my_add_new_task << new_task << ",";
+            LA.temp = "";
+            LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+            fstream task_create_date_1(LA.temp.c_str(),  ios::out |ios::app);
+            if(!task_create_date_1)
+            {
+                system("cls");
+                cout << "\n\nUnable to Add New Task\n\n";
+                Sleep(2000);
+                return 0;
+            }
+            if(LA.compare == 1)
+            {
+                task_create_date_1 << "MM/DD/YYYY" << "\n" <<  current_time(system_time);
+                task_create_date_1.close();
+            }
+            else
+            {
+                task_create_date_1.seekp(0, ios::end);
+                task_create_date_1 << "\n" << current_time(system_time) ;
+                task_create_date_1.close();
+            }
         
         }
         else 
@@ -338,38 +364,11 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
             my_add_new_task.seekg(0, ios::beg);
             getline(my_add_new_task, LA.temp);
             LA.compare = count_return(LA.temp);
+            LA.compare ++; 
             
-            switch (LA.compare) 
-            {
-                case 0:
-                    my_add_new_task.seekp(11, ios::beg);
-                    cout << "\n1st Habitual Task: ";
-                    cin >> new_task;
-                    my_add_new_task << new_task; // first task in first row and second column
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                case 4: 
+                if(LA.compare <= 5)
                 {
-                    if (LA.compare == 1) 
-                    {
-                        cout << "\n2nd Habitual Task: ";
-                    } else if (LA.compare == 2) 
-                    {
-                        cout << "\n3rd Habitual Task: ";
-                    } else if (LA.compare == 3) 
-                    {
-                        cout << "\n4th Habitual Task: ";
-                    } else if (LA.compare == 4) 
-                    {
-                        cout << "\n5th Habitual Task: ";
-                    } else 
-                    {
-                        cout << "\nAn Error Occurred\n\n";
-                        Sleep(2000);
-                        return 0;
-                    }
+                    cout << "\n " << (LA.compare) << ". Habitual Task: ";
                     
                     cin >> new_task;
                     b1 = check_length(new_task);
@@ -432,19 +431,34 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
                     
                     if (num_zero != 0) 
                     {
-                        cout << "\nUnable to Add New Task";
+                        system("cls");
+                        cout << "\nUnable to Add New Task\n";
+                        Sleep(2000);
+                        return 1;
                     }
+                     LA.temp = "";
+                     LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+                     fstream task_create_date_3(LA.temp.c_str(),  ios::out |ios::app);
+                     if(!task_create_date_3)
+                     {
+                        system("cls");
+                        cout << "\n\nUnable to Open Task File\n\n";
+                        Sleep(2000);
+                        return 1;
+                     }
+                     task_create_date_3.seekp(0, ios::end);
+                     task_create_date_3 << "\n" << current_time(system_time) ;
+                     task_create_date_3.close();
+
                 }
-                break;
-                default:
+                else
+                {
                     my_add_new_task.close();
                     cout << "\n\nYou Cannot Keep More than 5 Records at a Time\n\n";
                     Sleep(1500);
                     system("cls");
                     return 1;
-            }
-           
-            my_add_new_task.close();
+                }
         }
         
     }
@@ -493,12 +507,78 @@ int Login_Account_Features::view_user_task(Login_Account& LA, Audio& A)
         array_of_task[loop_counter] = LA.name;  // Store token in the array
         loop_counter++;  // Increment the count
     }
-
-    do 
+    LA.temp = "";
+    LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+    fstream task_create_date_2(LA.temp.c_str(), ios::in);
+    if(!task_create_date_2)
     {
-        user_journal_list_slection = user_journal_menu_list(array_of_task, loop_counter);
-    } while (user_journal_list_slection == "Eight");
+        system("cls");
+        cout << "\n\nUnable to Display User Task List\n\n";
+        Sleep(2000);
+        return 0;
+    }
+    
+    loop_counter_2 = 0;
+    while(getline(task_create_date_2, LA.temp))
+    {
+        loop_counter_2 ++;
+    }
+    string *date_array = new string[loop_counter_2];
+    if(date_array == NULL)
+    {
+        system("cls");
+        cout << "\n\nUnable to Display User Task List\n\n";
+        Sleep(2000);
+        return 0;
+    }
+    task_create_date_2.clear();
+    task_create_date_2.seekg(0, ios::beg);
+    loop_counter_2 = -1;
+    while(getline(task_create_date_2, LA.temp))
+    {
+        
+        if(loop_counter_2 == -1)
+        {
+            loop_counter_2 ++;
+            continue;
+        }
+        date_array[loop_counter_2].clear();
+        date_array[loop_counter_2] = LA.temp.c_str();
+        loop_counter_2 ++;
+
+    }
+    system("cls");
+    gotoxy(40, 10);
+    cout << "|_S.N|___User_Task__|Date_of_Create|" << endl;
+    for(int i=0; i < loop_counter; i++)
+    {
+        gotoxy(40, 10 + i*2 + 1);
+        cout << "___________________________________" << endl;
+        gotoxy(40, 10 + i*2 + 2);
+        cout << "|";
+        cout.setf(ios::right, ios::adjustfield);
+        cout.width(4);
+        cout << (i +1 )  << "|";
+        cout.setf(ios::right, ios::adjustfield);
+        cout.width(14);
+        cout << array_of_task[i] << "|";
+        cout.setf(ios::right, ios::adjustfield);
+        cout.width(14);
+        cout << date_array[i] << "|" << endl;
+        gotoxy(40, 10 + i*2 + 3);
+        cout << "___________________________________" << endl;
+    }
+    cout << "\n\n\t\t\t\t\tEnter Backspace Key to Return";
+    cout << "\e[?25l" ; // Hide curosr blinking
+    do
+    {
+        key = _getch();
+
+    } while (key != 8);
+    cout << "\e[?25h"; // Restore cursor visibility
+    delete [] date_array;  // delete dynamically allocated string array
     A.play_sound_only("Audio\\Back.wav");
+    system("cls");
     return 1;
 }
 
@@ -860,7 +940,6 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
         Sleep(1500);
         return 0;
     }
-
     user_journal_list_slection = user_journal_menu_list(array_of_task, loop_counter);
 
     if (user_journal_list_slection == "eight")
@@ -874,17 +953,27 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
             if (array_of_task[i] == user_journal_list_slection)
             {
                 temp_counter = i + 1;
+                break;
             }
         }
 
+        loop_counter =  delete_create_date(LA, loop_counter + 1, temp_counter );  // deleting user selected array
+        if(loop_counter == 0)
+        {
+            system("cls");
+            cout << "\nUnable to Delete Task\n\n";
+            Sleep(1500);
+            return 0;
+        }
+
         journal_status.seekg(0, ios::beg);
-        loop_counter = 0;
+        loop_counter = 0; 
 
         while (getline(journal_status, LA.temp))
         {
             loop_counter++;
         }
-
+        // call function delete create date here
         if (loop_counter == 1)
         {
             journal_status.close();
@@ -1000,5 +1089,51 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
     }
     A.play_sound_progress_bar("Audio\\Delete.wav", "Deleting " + user_journal_list_slection + " Task...");
     return 1;
+}
+int Login_Account_Features::delete_create_date(Login_Account& LA, int new_task_num, int unique_task_num)
+{
+            LA.temp = "";
+            LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+            fstream task_create_date_3(LA.temp.c_str(),  ios::in);
+            if(!task_create_date_3)
+            {
+                return 0;
+            }
+            loop_counter = 0;
+
+            string *date_array_2 = new string[new_task_num-1];
+            for(int i=0; i<new_task_num; i++)
+            {
+                getline(task_create_date_3, LA.temp);
+                if(i == unique_task_num )
+                {
+                    continue;
+                }
+                date_array_2[loop_counter] = LA.temp;
+                loop_counter ++;
+            }
+            task_create_date_3.close();
+
+            LA.temp = "";
+            LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+            cout << LA.temp << endl;
+            
+            task_create_date_3.open(LA.temp.c_str(), ios::out);
+            if(!task_create_date_3)
+            {
+                return 0;
+            }
+            for(int i = 0; i< loop_counter; i++)
+            {
+                if( i == 0)
+                {
+                    task_create_date_3 << date_array_2[i];
+                    continue;
+                }
+                task_create_date_3 << "\n" << date_array_2[i];
+            }
+            task_create_date_3.close();
+            delete [] date_array_2;
+            return 1;
 }
 #endif // end of declaration

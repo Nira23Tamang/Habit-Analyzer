@@ -1,7 +1,7 @@
 #ifndef LOGIN_ACCOUNT
 #define LOGIN_ACCOUNT
+
 #include <sstream>
-//#include <string>
 
 using namespace std;
 
