@@ -10,7 +10,7 @@ class Create_Account : public Password_Security, public Encryption_and_Decryptio
 {
  protected:
     string name, password, re_password, User_ID, temp, 
-    temp_2[4], user_ask_list[3], user_excel_list[3], user_journal_list[1], Unique_ID[1];
+    temp_2[5], user_ask_list[3], user_excel_list[3], user_journal_list[1], Unique_ID[1];
     string security_question;
     double user_id;
     int compare;
@@ -42,7 +42,15 @@ class Create_Account : public Password_Security, public Encryption_and_Decryptio
     int open_file();
     // Function to check whether all file opened or not
     static int account_check();
-
+    // Function to open user sound setting file
+    int sound_setting()
+    {
+        encrypt(User_ID);
+         temp_2[4].clear(); 
+         temp_2[4] = temp_2[4] + User_ID + "\\" + User_ID + "_sound.txt";
+          decrypt(User_ID);
+         return 1;
+    }
     ~Create_Account(){ }// Create Account Destructor
 };
 
@@ -184,7 +192,7 @@ int Create_Account::get_security_details()
 int Create_Account:: open_file()
 {
     file_count = 0;
-    for(int i=0; i<4; i++)
+    for(int i=0; i<5; i++)
     {
                 if( i == 0 )
                 {
@@ -259,6 +267,22 @@ int Create_Account:: open_file()
                     mycsv.close();
                     file_count++;  // file Journal File opened successfully, counter up
                 }
+                if(i == 4)
+                {
+                  
+                   fstream mysound(temp_2[i].c_str(), ios::out);
+                     if(!mysound)
+                    {
+                       system("cls");
+                       cout << "Unable to open sound file\n";
+                       Sleep(2500); 
+                       return 0;
+            
+                    }
+                    mysound << 1;
+                     mysound.close();
+                     file_count ++;
+                }
     }
     return file_count;
 }
@@ -267,7 +291,7 @@ int Create_Account:: account_check()
     system("cls");
     try
     {
-        if (file_count == 4)
+        if (file_count == 5)
         {
             return file_count;
         }

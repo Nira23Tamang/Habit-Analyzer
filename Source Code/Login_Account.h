@@ -10,6 +10,7 @@ class Login_Account_Features; // forward declaration for login menu features
 class Login_Account : public Create_Account  // Handle only allowing to enter to login account
 {
  protected:
+    string user_id_2;
     string str_line, storedPassword;
     bool userIDExists = false;
     int commaCounter = 0;
@@ -28,12 +29,17 @@ class Login_Account : public Create_Account  // Handle only allowing to enter to
     string return_password();
 
     int reset_password();
+
+    string return_user_id()
+    {
+        return user_id_2;
+    }
     
 };
 void Login_Account::  get_user_id()
 {
         cout << "\n\nUser ID: ";
-        cin >> User_ID;
+        cin >> user_id_2;
 }
 int Login_Account:: user_id_check()
 {
@@ -47,11 +53,11 @@ int Login_Account:: user_id_check()
             return 0;
         }
 
-        encrypt(User_ID);
+        encrypt(user_id_2);
 
         while (getline(myfile, str_line))
         {
-            if (str_line == User_ID)
+            if (str_line == user_id_2)
             {
                 userIDExists = true;
                 break;
@@ -62,9 +68,9 @@ int Login_Account:: user_id_check()
 
         if (!userIDExists)
         {
-            decrypt(User_ID);
+            decrypt(user_id_2);
             system("cls");
-            cout << "\n\nUser ID: " << User_ID << " Does Not Exist\n\n";
+            cout << "\n\nUser ID: " << user_id_2 << " Does Not Exist\n\n";
             return 0;
         }
         return 1;
@@ -74,7 +80,7 @@ int Login_Account:: user_password_check()
         cout << "\n\nPassword: ";
         get_password(password);
 
-        temp = User_ID + "\\" + User_ID + "_Details.csv";
+        temp = user_id_2 + "\\" + user_id_2 + "_Details.csv";
         ifstream myfile(temp.c_str());
 
         if (!myfile)
@@ -121,7 +127,7 @@ string Login_Account:: return_password()
 int Login_Account:: reset_password()
 {
         temp.clear();
-        temp = User_ID + "\\" + User_ID + "_Security.csv";
+        temp = user_id_2 + "\\" + user_id_2 + "_Security.csv";
         fstream my_pass_reset(temp.c_str(), ios::in | ios::out);
 
         if (!my_pass_reset)
@@ -157,7 +163,7 @@ int Login_Account:: reset_password()
             my_pass_reset.close();
             system("cls");
 
-            temp = User_ID + "\\" + User_ID + "_Details.csv";
+            temp = user_id_2 + "\\" + user_id_2 + "_Details.csv";
             fstream my_pass_update(temp.c_str(), ios::in);
             if (my_pass_update.fail())
             {
@@ -185,7 +191,7 @@ int Login_Account:: reset_password()
                 }
                 my_pass_update.close();
 
-                name = User_ID + "\\" + User_ID + "_Details.csv";
+                name = user_id_2 + "\\" + user_id_2 + "_Details.csv";
                 fstream my_new_pass_update(name.c_str(), ios::out | ios::trunc);
                 if (my_new_pass_update.fail())
                 {

@@ -6,18 +6,18 @@ class Login_Menu_Option
  public:
     Login_Menu_Option() { }
 
-    int login_menu_list(Audio& A);
+    int login_menu_list(Audio& A, Login_Account LA);
 
     friend class Audio;
 
     ~Login_Menu_Option() { } // Login_Menu_List Destructor
 };
 
-int Login_Menu_Option::login_menu_list(Audio& A)
+int Login_Menu_Option::login_menu_list(Audio& A, Login_Account LA)
 {
     const int DEFAULT_COLOR = 7;
     const int HIGHLIGHT_COLOR = 2;
-    static int Set[] = {7, 7, 7, 7, 7, 7, 7};  // Default colors
+    static int Set[] = {7, 7, 7, 7, 7, 7, 7, 7};  // Default colors
     static int counter = 0;
     static int backspace_counter = 0;
     static char key;
@@ -53,13 +53,17 @@ int Login_Menu_Option::login_menu_list(Audio& A)
 
         gotoxy(60, 22);
         color(Set[6]);
+        cout << "Audio Settig";
+
+        gotoxy(60, 24);
+        color(Set[7]);
         cout << "Exit Application";
         here:  // goto label
         key = _getch();  // Get user input
 
         if (key == 72 || key == 80) 
         {  // Arrow keys: 72 (up), 80 (down)
-            if (key == 80 && counter < 7) 
+            if (key == 80 && counter < 8) 
             {
                 counter++;
             }
@@ -69,7 +73,7 @@ int Login_Menu_Option::login_menu_list(Audio& A)
             }
         } 
         else if (key == 13) 
-        {   A.play_sound_only("Audio\\Enter.wav");
+        {   A.play_sound_only("Audio\\Enter.wav", LA.return_user_id() );
             // Enter key (carriage return)
             color(7);
             switch (counter)
@@ -108,7 +112,10 @@ int Login_Menu_Option::login_menu_list(Audio& A)
                     Set[6] = 7;
                     counter = 0;
                     return 7;
-
+                case 8:
+                    Set[7] = 7;
+                    counter = 0;
+                    return 8;
                 default:
                     return 0;
             }
@@ -118,13 +125,13 @@ int Login_Menu_Option::login_menu_list(Audio& A)
             goto here;
         }
         // Reset all menu options to default color
-        for (int i = 0; i < 7; i++) 
+        for (int i = 0; i < 8; i++) 
         {
             Set[i] = 7;
         }
 
         // Highlight the selected option
-        for (int i = 1; i <= 7; i++) 
+        for (int i = 1; i <= 8; i++) 
         {
             if (counter == i) 
             {

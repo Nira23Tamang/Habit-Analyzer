@@ -35,6 +35,49 @@ class Login_Account_Features : public Login_Account, public System_Time
     int delete_account(Login_Account& LA, Audio& A);
     
     int delete_create_date(Login_Account& LA, int new_task_num, int unique_task_num);
+    void sound_file(Login_Account& LA, Audio& A)
+    {
+        LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_sound.txt";
+        fstream sound_status;
+        sound_status.open(LA.temp.c_str(), ios::in);
+        if (!sound_status) 
+        {
+            system("cls");
+           cout << "\n\nUnable to Open User Sound File\n\n";
+        }
+        sound_status >> num_zero;
+        sound_status.close();
+        string sound_option[1];
+        if(num_zero == 1)
+        {
+            sound_option[0] = "Sound Off";
+        }
+        else 
+        {
+            sound_option[0] = "Sound On";
+        }
+        user_journal_list_slection = user_journal_menu_list(sound_option, 1);
+        if(user_journal_list_slection != "eight")
+        {
+            sound_status.open(LA.temp.c_str(), ios::out);
+
+            if(sound_option[0] == "Sound On")
+            {
+                sound_status << 1;
+            }
+            else
+            {
+                sound_status << 0;
+            }
+            sound_status.close();
+            A.play_sound_progress_bar("Audio\\Update.wav", "Updating Setting...", LA.return_user_id());
+
+        }
+        else
+        {
+
+        }
+    }
 
     ~Login_Account_Features() { } // Destructor of Login_Account_Features
 };
@@ -133,7 +176,7 @@ bool Login_Account_Features::check_length(string sample)
 }
 int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A) 
 {
-    LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
+    LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
     fstream journal_status(LA.temp.c_str(), ios::in | ios::out);
     if (!journal_status) 
     {
@@ -257,7 +300,7 @@ int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A)
         }
     }
     journal_status.close();
-    A.play_sound_progress_bar("Audio\\Update.wav", "Updating Task...");
+    A.play_sound_progress_bar("Audio\\Update.wav", "Updating Task...", LA.return_user_id());
     return 1;
 }
 
@@ -283,7 +326,7 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
 {
     string new_task;
     LA.temp.clear();
-    LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
+    LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
     fstream my_add_new_task(LA.temp.c_str(), ios::in | ios::out);
 
     if (!my_add_new_task) 
@@ -334,7 +377,7 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
             
             my_add_new_task << new_task << ",";
             LA.temp = "";
-            LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+            LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Task_Create_Date.csv";
             fstream task_create_date_1(LA.temp.c_str(),  ios::out |ios::app);
             if(!task_create_date_1)
             {
@@ -382,7 +425,7 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
                     loop_counter = 0;
                     my_add_new_task.seekp(0, ios::beg);
                     // opening temporary file for shifting above file data
-                    LA.temp = LA.User_ID + "\\" + "Temp" + "_Journal.csv";
+                    LA.temp = LA.user_id_2 + "\\" + "Temp" + "_Journal.csv";
                     fstream mytemp(LA.temp, ios::in | ios::out | ios::trunc);
                     
                     if (!mytemp) 
@@ -437,7 +480,7 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
                         return 1;
                     }
                      LA.temp = "";
-                     LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+                     LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Task_Create_Date.csv";
                      fstream task_create_date_3(LA.temp.c_str(),  ios::out |ios::app);
                      if(!task_create_date_3)
                      {
@@ -462,13 +505,13 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
         }
         
     }
-     A.play_sound_progress_bar("Audio\\Add.wav", "Adding " + (new_task) + " Task...");
+     A.play_sound_progress_bar("Audio\\Add.wav", "Adding " + (new_task) + " Task...", LA.return_user_id());
      return 1;
 }
 int Login_Account_Features::view_user_task(Login_Account& LA, Audio& A) 
 {
-    A.play_sound_progress_bar("Audio\\View.wav", "Viewing Task List...");
-    LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
+    A.play_sound_progress_bar("Audio\\View.wav", "Viewing Task List...", LA.return_user_id());
+    LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
     fstream journal_status(LA.temp.c_str(), ios::in);
 
     if (!journal_status) 
@@ -508,7 +551,7 @@ int Login_Account_Features::view_user_task(Login_Account& LA, Audio& A)
         loop_counter++;  // Increment the count
     }
     LA.temp = "";
-    LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+    LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Task_Create_Date.csv";
     fstream task_create_date_2(LA.temp.c_str(), ios::in);
     if(!task_create_date_2)
     {
@@ -577,13 +620,14 @@ int Login_Account_Features::view_user_task(Login_Account& LA, Audio& A)
     } while (key != 8);
     cout << "\e[?25h"; // Restore cursor visibility
     delete [] date_array;  // delete dynamically allocated string array
-    A.play_sound_only("Audio\\Back.wav");
+    A.play_sound_only("Audio\\Back.wav",LA.return_user_id());
     system("cls");
     return 1;
 }
 
 string Login_Account_Features:: user_journal_menu_list(string array[], int num) 
 {
+    system("cls");
     const int DEFAULT_COLOR = 7;
     int Set[num];
 
@@ -655,7 +699,7 @@ string Login_Account_Features:: user_journal_menu_list(string array[], int num)
 int Login_Account_Features::task_status_report(Login_Account& LA, Audio& A)
 {
     LA.temp.clear();
-    LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
+    LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
     fstream task_status(LA.temp.c_str(), ios::in);
     
     if (!task_status) 
@@ -832,7 +876,7 @@ int Login_Account_Features::task_status_report(Login_Account& LA, Audio& A)
         
         return 0;
     }
-    A.play_sound_progress_bar("Audio\\Report.wav", ("Preparing " + (user_journal_list_slection) + " Report Graph...") );
+    A.play_sound_progress_bar("Audio\\Report.wav", ("Preparing " + (user_journal_list_slection) + " Report Graph..."), LA.return_user_id());
     int report_status = report_graph(bar_height, bars_name, menu_list_counter);
     if (report_status == 1) 
     {
@@ -865,7 +909,7 @@ int Login_Account_Features:: delete_account(Login_Account& LA, Audio& A)
     loop_counter = 0;
      while (getline(myfile, LA.temp))
     {
-        if(LA.temp == LA.User_ID )
+        if(LA.temp == LA.user_id_2 )
         {
             continue;
         }
@@ -887,15 +931,15 @@ int Login_Account_Features:: delete_account(Login_Account& LA, Audio& A)
         myfile << id_list[i] << "\n";
     }
     myfile.close();
-    LA.temp = LA.temp + "rmdir /S /Q " + LA.User_ID ;
+    LA.temp = LA.temp + "rmdir /S /Q " + LA.user_id_2 ;
     system(LA.temp.c_str());
-    LA.decrypt(LA.User_ID);
-    A.play_sound_progress_bar("Audio\\Error_2.wav", "Deleting "+ (LA.User_ID) + " Account...");
+    LA.decrypt(LA.user_id_2);
+    A.play_sound_progress_bar("Audio\\Error_2.wav", "Deleting "+ (LA.user_id_2) + " Account...", LA.return_user_id());
     return 1;
 }
 int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
 {
-    LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
+    LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
     fstream journal_status(LA.temp.c_str(), ios::in);
 
     if (!journal_status)
@@ -977,7 +1021,7 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
         if (loop_counter == 1)
         {
             journal_status.close();
-            LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
+            LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
             journal_status.open(LA.temp.c_str(), ios::out | ios::trunc);
 
             if (!journal_status)
@@ -1009,7 +1053,7 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
             if (menu_list_counter == 1)
             {
                 journal_status.close();
-                LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
+                LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
                 journal_status.open(LA.temp.c_str(), ios::out | ios::trunc);
 
                 if (!journal_status)
@@ -1058,7 +1102,7 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
                 }
 
                 journal_status.close();
-                LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Journal.csv";
+                LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
                 journal_status.open(LA.temp.c_str(), ios::out | ios::trunc);
 
                 if (!journal_status)
@@ -1087,13 +1131,13 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
             }
         }
     }
-    A.play_sound_progress_bar("Audio\\Delete.wav", "Deleting " + user_journal_list_slection + " Task...");
+    A.play_sound_progress_bar("Audio\\Delete.wav", "Deleting " + user_journal_list_slection + " Task...", LA.return_user_id());
     return 1;
 }
 int Login_Account_Features::delete_create_date(Login_Account& LA, int new_task_num, int unique_task_num)
 {
             LA.temp = "";
-            LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+            LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Task_Create_Date.csv";
             fstream task_create_date_3(LA.temp.c_str(),  ios::in);
             if(!task_create_date_3)
             {
@@ -1115,7 +1159,7 @@ int Login_Account_Features::delete_create_date(Login_Account& LA, int new_task_n
             task_create_date_3.close();
 
             LA.temp = "";
-            LA.temp = LA.User_ID + "\\" + LA.User_ID + "_Task_Create_Date.csv";
+            LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Task_Create_Date.csv";
             cout << LA.temp << endl;
             
             task_create_date_3.open(LA.temp.c_str(), ios::out);

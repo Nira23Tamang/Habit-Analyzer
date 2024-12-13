@@ -13,7 +13,7 @@ int main()
 {
     system("cls");
     Audio A;  // Audio class
-    A.play_sound_progress_bar("Audio\\System_Login.wav", "Loading...");   
+    A.play_sound_progress_bar("Audio\\System_Login.wav", "Loading...", "Default");   
     while (1)
    {
     first_menu:
@@ -33,7 +33,7 @@ int main()
             
              if(LA.user_id_check() == 0)
              {
-                A.play_sound_only("Audio\\Error_1.wav");
+                A.play_sound_only("Audio\\Error_1.wav", "Default");
                 Sleep(1500);
                 goto first_menu;
              }
@@ -41,11 +41,11 @@ int main()
             password_ok: // label for re_entered password
             if (password_check == 1)
             {
-                A.play_sound_progress_bar("Audio\\Login.wav", "Logging In...");
+                A.play_sound_progress_bar("Audio\\Login.wav", "Logging In...", LA.return_user_id() );
                 Login_Menu_Option LMO;
 
                 login_menu_again: // goto label
-                int login_option_choose = LMO.login_menu_list(A);
+                int login_option_choose = LMO.login_menu_list(A, LA);
               
 
                 Login_Account_Features LAF;
@@ -60,14 +60,14 @@ int main()
                     }
                     else if(login_status == 0)
                     {
-                        A.play_sound_only("Audio\\Error_1.wav");
+                        A.play_sound_only("Audio\\Error_1.wav", LA.return_user_id());
                         Sleep(1500);
                         system("cls");
                         goto login_menu_again;
                     }
                     else 
                     {
-                        A.play_sound_only("Audio\\Back.wav");  
+                        A.play_sound_only("Audio\\Back.wav", LA.return_user_id());  
                         system("cls"); 
                         goto login_menu_again;
                     }
@@ -81,7 +81,7 @@ int main()
                     }
                     else
                     {
-                        A.play_sound_only("Audio\\Error_1.wav");
+                        A.play_sound_only("Audio\\Error_1.wav", LA.return_user_id());
                         goto first_menu;
                     }
                 }
@@ -97,7 +97,7 @@ int main()
                     }
                     else
                     {
-                        A.play_sound_only("Audio\\Error_1.wav");
+                        A.play_sound_only("Audio\\Error_1.wav", LA.return_user_id());
                         goto login_menu_again;
                     }
                 }
@@ -113,7 +113,7 @@ int main()
                         }
                         else 
                         {
-                            A.play_sound_only("Audio\\Error_1.wav");
+                            A.play_sound_only("Audio\\Error_1.wav", LA.return_user_id());
                             goto login_menu_again;
                         }
                     }
@@ -127,7 +127,7 @@ int main()
                     
                     if (task_status == 1 || task_status == 0)
                     {
-                        A.play_sound_only("Audio\\Error_1.wav");
+                        A.play_sound_only("Audio\\Error_1.wav", LA.return_user_id());
                         goto login_menu_again;
                     }
                 }
@@ -141,13 +141,19 @@ int main()
                     }
                     else
                     {
-                        A.play_sound_only("Audio\\Error_1.wav");
+                        A.play_sound_only("Audio\\Error_1.wav", LA.return_user_id());
                         goto login_menu_again;
                     }
                 }
-                else if (login_option_choose == 7)
+                else if(login_option_choose == 7)
                 {
-                     A.play_sound_progress_bar("Audio\\Report.wav", "Exiting...");
+                    LAF.sound_file(LA, A);
+                    goto login_menu_again;
+
+                }
+                else if (login_option_choose == 8)
+                {
+                     A.play_sound_progress_bar("Audio\\Report.wav", "Exiting...", LA.return_user_id());
                      return 0;
                 }
                 else 
@@ -160,7 +166,7 @@ int main()
                 Create_Account CA_1;
                 again_enter_pass: // label from again_enter_pass
                 system("cls");
-                A.play_sound_only("Audio\\Error_1.wav");
+                A.play_sound_only("Audio\\Error_1.wav","Default");
                 cout << "\n\nIncorrect Password\n\n";
                 Sleep(1500);
 
@@ -181,20 +187,20 @@ int main()
                         {
                             password_check = 1;
                             cout << "\n\nPassword Reset Sucessfull\n\n";
-                            A.play_sound_only("Audio\\Update.wav");
+                            A.play_sound_only("Audio\\Update.wav", "Default");
                             Sleep(1500);
                             goto first_menu;
                         }
                         else
                         {
                             
-                            A.play_sound_only("Audio\\Error_1.wav");
+                            A.play_sound_only("Audio\\Error_1.wav", "Default");
                             Sleep(1500);
                         }
                     }
                     else
                     {
-                        A.play_sound_only("Audio\\Error_1.wav");
+                        A.play_sound_only("Audio\\Error_1.wav", "Default");
 
                        goto first_menu;
                     }
@@ -244,10 +250,13 @@ int main()
             {
                 break;
             }
-
-            if (CA.open_file() == 4)
+            if (CA.sound_setting() == 0)
             {
-               A.play_sound_progress_bar("Audio\\Sign.wav", "Creating Account...");
+                break;
+            }
+            if (CA.open_file() == 5)
+            {
+               A.play_sound_progress_bar("Audio\\Sign.wav", "Creating Account...","Default");
             }
             else
             {
@@ -259,12 +268,12 @@ int main()
         break;
         case 3:
         {
-            A.play_sound_progress_bar("Audio\\Report.wav", "Exiting...");
+            A.play_sound_progress_bar("Audio\\Report.wav", "Exiting...","Default");
             return 0;
         }
         default:
         {
-            A.play_sound_only("Audio\\Error_1.wav");
+            A.play_sound_only("Audio\\Error_1.wav", "Default");
             cout << "\n\nAn Unexpected Error Occured\n\n";
             Sleep(2500);
             return 0;
