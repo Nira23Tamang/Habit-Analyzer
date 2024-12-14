@@ -8,7 +8,7 @@ class Login_Account_Features : public Login_Account, public System_Time
 {
  protected:
     int menu_list_counter = 0, loop_counter = 0, loop_counter_2 = 0, num_zero = 0, temp_counter = 0;  // for counting loop and number of zeros
-    string system_time, file_time, user_journal_list_slection;
+    string system_time, file_time, user_journal_list_slection, file_opener;
     char key;
 
  public:
@@ -35,49 +35,8 @@ class Login_Account_Features : public Login_Account, public System_Time
     int delete_account(Login_Account& LA, Audio& A);
     
     int delete_create_date(Login_Account& LA, int new_task_num, int unique_task_num);
-    void sound_file(Login_Account& LA, Audio& A)
-    {
-        LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_sound.txt";
-        fstream sound_status;
-        sound_status.open(LA.temp.c_str(), ios::in);
-        if (!sound_status) 
-        {
-            system("cls");
-           cout << "\n\nUnable to Open User Sound File\n\n";
-        }
-        sound_status >> num_zero;
-        sound_status.close();
-        string sound_option[1];
-        if(num_zero == 1)
-        {
-            sound_option[0] = "Sound Off";
-        }
-        else 
-        {
-            sound_option[0] = "Sound On";
-        }
-        user_journal_list_slection = user_journal_menu_list(sound_option, 1);
-        if(user_journal_list_slection != "eight")
-        {
-            sound_status.open(LA.temp.c_str(), ios::out);
 
-            if(sound_option[0] == "Sound On")
-            {
-                sound_status << 1;
-            }
-            else
-            {
-                sound_status << 0;
-            }
-            sound_status.close();
-            A.play_sound_progress_bar("Audio\\Update.wav", "Updating Setting...", LA.return_user_id());
-
-        }
-        else
-        {
-
-        }
-    }
+    void sound_file(Login_Account& LA, Audio& A);
 
     ~Login_Account_Features() { } // Destructor of Login_Account_Features
 };
@@ -256,7 +215,62 @@ int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A)
                 continue;
             }
             journal_status << "," << task_status[i];
-        }
+        }    
+        file_opener.clear();
+                file_opener = file_opener + LA.user_id_2 + "\\Task_List\\" + user_journal_list_slection + ".csv";
+                fstream individual_file_pointer;  // used for individual file count
+                individual_file_pointer.open(file_opener.c_str(), ios::in);
+                if(!individual_file_pointer)
+                {
+                    system("cls");
+                    cout << "Unable to open individual file for updating of historical data first last\n";
+                    return 0;
+                } 
+                num_zero = 0;
+                while(individual_file_pointer)
+                {
+                    if(individual_file_pointer.eof() != 0)
+                    {
+                        break;
+                    }
+                    getline(individual_file_pointer, file_opener);  // using file_pointer as string here
+                    num_zero ++;
+
+                }
+                string array_individual[num_zero];
+                
+                individual_file_pointer.seekg(0, ios::beg);
+                loop_counter = 0;
+                while(individual_file_pointer)
+                {
+                    if(individual_file_pointer.eof() != 0)
+                    {
+                        break;
+                    }
+                    getline(individual_file_pointer, array_individual[loop_counter]);
+                    loop_counter ++;
+
+                }
+                individual_file_pointer.close();
+                file_opener.clear();
+                file_opener = file_opener + LA.user_id_2 + "\\Task_List\\" + user_journal_list_slection + ".csv";
+                individual_file_pointer.open(file_opener.c_str(), ios::out | ios::trunc);
+                if(!individual_file_pointer)
+                {
+                    system("cls");
+                    cout << "Unable to open individual file for updating of historical data Second last\n";
+                    return 0;
+                } 
+                for(int i=0; i<num_zero; i++)
+                {
+                    if(i == num_zero - 1)
+                    {
+                        individual_file_pointer << system_time << "," << "Done";
+                        break;
+                    }
+                    individual_file_pointer  << array_individual[i] << endl;
+                }
+                individual_file_pointer.close();
     } 
     else 
     { // when system time and file time do not match
@@ -268,7 +282,7 @@ int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A)
             journal_status << "0" << ",";
         }
         // Separate word from line
-        {
+        
             // Create a stringstream object for the data
             stringstream ss(LA.temp);
             string array_of_task[menu_list_counter]; // arrays of string
@@ -297,7 +311,43 @@ int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A)
                 }
                 journal_status << "0" << ",";
             }
-        }
+        
+        for(int i=0; i<menu_list_counter; i++)
+        {
+            if( array_of_task[i] == user_journal_list_slection)
+            {
+                file_opener.clear();
+                file_opener = file_opener + LA.user_id_2 + "\\Task_List\\" + user_journal_list_slection + ".csv";
+                fstream individual_file_pointer;  // used for individual file count
+                individual_file_pointer.open(file_opener.c_str(), ios::app);
+                if(!individual_file_pointer)
+                {
+                    system("cls");
+                    cout << "Unable to open individual file for updating of historical data\n";
+                    return 0;
+                } 
+                individual_file_pointer << "\n" << system_time << "," << "Done";
+
+                individual_file_pointer.close();
+            }
+            else
+            {
+                file_opener.clear();
+                file_opener = file_opener + LA.user_id_2 + "\\Task_List\\" + array_of_task[i] + ".csv";
+                fstream individual_file_pointer_2;  // used for individual file count
+                individual_file_pointer_2.open(file_opener.c_str(), ios::app);
+                if(!individual_file_pointer_2)
+                {
+                    system("cls");
+                    cout << "Unable to open individual file for updating of historical data\n";
+                    return 0;
+                }
+                individual_file_pointer_2 << "\n" << system_time << "," << "Not Done";
+
+                individual_file_pointer_2.close();
+            }
+        }   
+        
     }
     journal_status.close();
     A.play_sound_progress_bar("Audio\\Update.wav", "Updating Task...", LA.return_user_id());
@@ -505,7 +555,17 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
         }
         
     }
-     A.play_sound_progress_bar("Audio\\Add.wav", "Adding " + (new_task) + " Task...", LA.return_user_id());
+    LA.temp.clear();
+       LA.temp = LA.temp + LA.user_id_2 + "\\Task_List\\" + new_task + ".csv";
+        fstream individual_task(LA.temp.c_str(), ios::out);
+        if(!individual_task)
+        {
+            cout << "Unable";
+            exit(0);
+        }
+        individual_task << "Day Count" << "," << 0;
+        individual_task.close();
+       A.play_sound_progress_bar("Audio\\Add.wav", "Adding " + (new_task) + " Task...", LA.return_user_id());
      return 1;
 }
 int Login_Account_Features::view_user_task(Login_Account& LA, Audio& A) 
@@ -698,6 +758,10 @@ string Login_Account_Features:: user_journal_menu_list(string array[], int num)
 
 int Login_Account_Features::task_status_report(Login_Account& LA, Audio& A)
 {
+    string task_status_menu[2] = { "Graphical Status Report", "Non Graphical Status Report"};
+    user_journal_list_slection = user_journal_menu_list(task_status_menu, 2);
+if(user_journal_list_slection == "Graphical Status Report")
+{
     LA.temp.clear();
     LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
     fstream task_status(LA.temp.c_str(), ios::in);
@@ -882,7 +946,88 @@ int Login_Account_Features::task_status_report(Login_Account& LA, Audio& A)
     {
         return 1;
     } 
+}
+else
+{
+    LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
+    fstream journal_status(LA.temp.c_str(), ios::in);
+
+    if (!journal_status) 
+    {
+        system("cls");
+        cout << "\n\nUnable to Open User Journal File\n\n";
+        Sleep(1500);
+        return 0;
+    }
+
+    journal_status.seekg(0, ios::beg);  // sets pointer to the first
+    LA.temp.clear();
+    getline(journal_status, LA.temp); // read user habitual task
+    menu_list_counter = count_return(LA.temp);  // Number of Task in Journal
+
+    if (menu_list_counter == 0) 
+    {
+         system("cls");
+        cout << "\n\nUser Don't Have Any Daily Habitual Task\n\n";
+        Sleep(1500);
+       
+        return 0;
+    }
+
+    stringstream ss(LA.temp);
+    
+    loop_counter = 0;
+    string array_of_task[menu_list_counter]; // arrays of string
+
+    while (getline(ss, LA.name, ',')) 
+    {
+        if (LA.name == "MM/DD/YYYY") 
+        {
+            continue;
+        }
+        array_of_task[loop_counter] = LA.name;  // Store token in the array
+        loop_counter++;  // Increment the count
+    }
+    user_journal_list_slection = user_journal_menu_list(array_of_task, menu_list_counter);
+
+    LA.temp.clear();
+    LA.temp = LA.user_id_2 + "\\" + "Task_List" +"\\" + user_journal_list_slection + ".csv";
+
+    fstream task_status(LA.temp.c_str(), ios::in);
+    
+    if (!task_status) 
+    {
+        system("cls");
+        cout << "\n\nUnable to Display User Individual Journal Report" << endl;
+        Sleep(1500);
+        return 0;
+    }
+    num_zero = 1;
+    while(task_status)
+    {
+        if(task_status.eof() != 0)
+        {
+            break;
+        }
+        getline(task_status, LA.temp);
+        cout << "\t\t\t" << num_zero << ": " << LA.temp << "\n\n";
+        num_zero ++;
+
+    }
+    num_zero = 0;
+    task_status.close();
+    cout << "\t\t\t\t\tEnter Backspace Key to Return";
+    cout << "\e[?25l" ; // Hide curosr blinking
+    do
+    {
+        key = _getch();
+
+    } while (key != 8);
+    cout << "\n\n\t\t\t\t\tEnter Backspace Key to Return";
+    cout << "\e[?25h"; // Restore cursor visibility
     return 0;
+    
+}
 }
 int Login_Account_Features:: delete_account(Login_Account& LA, Audio& A)
 {
@@ -996,6 +1141,7 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
         {
             if (array_of_task[i] == user_journal_list_slection)
             {
+                
                 temp_counter = i + 1;
                 break;
             }
@@ -1077,7 +1223,7 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
                 if (temp_task == NULL)
                 {
                     system("cls");
-                    cout << "\n\nUnablt to Delete Task\n\n";
+                    cout << "\n\nUnable to Delete Task\n\n";
                     Sleep(1500);
                     return 0;
                 }
@@ -1131,6 +1277,15 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
             }
         }
     }
+    // Deleting files from
+    LA.temp.clear();
+    LA.temp = LA.temp + LA.user_id_2 + "\\Task_List\\" + user_journal_list_slection + ".csv";
+    if( remove(LA.temp.c_str()) != 0)
+    {
+        system("cls");
+        cout << "\nUnable to delete task\n";
+        exit(0);
+    }
     A.play_sound_progress_bar("Audio\\Delete.wav", "Deleting " + user_journal_list_slection + " Task...", LA.return_user_id());
     return 1;
 }
@@ -1160,7 +1315,6 @@ int Login_Account_Features::delete_create_date(Login_Account& LA, int new_task_n
 
             LA.temp = "";
             LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Task_Create_Date.csv";
-            cout << LA.temp << endl;
             
             task_create_date_3.open(LA.temp.c_str(), ios::out);
             if(!task_create_date_3)
@@ -1180,4 +1334,47 @@ int Login_Account_Features::delete_create_date(Login_Account& LA, int new_task_n
             delete [] date_array_2;
             return 1;
 }
+void Login_Account_Features:: sound_file(Login_Account& LA, Audio& A)
+    {
+        LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_sound.txt";
+        fstream sound_status;
+        sound_status.open(LA.temp.c_str(), ios::in);
+        if (!sound_status) 
+        {
+            system("cls");
+           cout << "\n\nUnable to Open User Sound File\n\n";
+        }
+        sound_status >> num_zero;
+        sound_status.close();
+        string sound_option[1];
+        if(num_zero == 1)
+        {
+            sound_option[0] = "Sound Off";
+        }
+        else 
+        {
+            sound_option[0] = "Sound On";
+        }
+        user_journal_list_slection = user_journal_menu_list(sound_option, 1);
+        if(user_journal_list_slection != "eight")
+        {
+            sound_status.open(LA.temp.c_str(), ios::out);
+
+            if(sound_option[0] == "Sound On")
+            {
+                sound_status << 1;
+            }
+            else
+            {
+                sound_status << 0;
+            }
+            sound_status.close();
+            A.play_sound_progress_bar("Audio\\Update.wav", "Updating Setting...", LA.return_user_id());
+
+        }
+        else
+        {
+
+        }
+    }
 #endif // end of declaration

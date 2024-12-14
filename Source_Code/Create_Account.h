@@ -216,7 +216,12 @@ int Create_Account:: open_file()
                 {
                     temp.clear();
                     encrypt(User_ID); // encrypting user id for opening folder
+
                     temp = temp + "mkdir " + User_ID;
+                    system(temp.c_str());
+
+                    temp.clear();
+                    temp = temp + "mkdir C:\\Users\\niraj\\Documents\\Desktop\\Vs_Code\\Habit-Analyzer\\Source_Code\\"+ User_ID + "\\Task_List";
                     system(temp.c_str());
                     fstream mydetail(temp_2[i].c_str(), ios::out);
                     if (mydetail.fail())
