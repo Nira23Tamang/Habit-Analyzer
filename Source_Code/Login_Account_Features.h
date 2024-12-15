@@ -760,7 +760,12 @@ int Login_Account_Features::task_status_report(Login_Account& LA, Audio& A)
 {
     string task_status_menu[2] = { "Graphical Status Report", "Non Graphical Status Report"};
     user_journal_list_slection = user_journal_menu_list(task_status_menu, 2);
-if(user_journal_list_slection == "Graphical Status Report")
+if (user_journal_list_slection == "eight")
+{
+    system("cls");
+    return 0;
+}
+else if(user_journal_list_slection == "Graphical Status Report")
 {
     LA.temp.clear();
     LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_Journal.csv";
@@ -1105,6 +1110,7 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
         system("cls");
         cout << "\n\nUser Doesn't Have Any Daily Habitual Task\n\n";
         Sleep(1500);
+        system("cls");
         return 0;
     }
 
@@ -1127,6 +1133,7 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
         system("cls");
         cout << "\n\nYou Don't Have Any Habitual Task to Delete\n\n";
         Sleep(1500);
+        system("cls");
         return 0;
     }
     user_journal_list_slection = user_journal_menu_list(array_of_task, loop_counter);
