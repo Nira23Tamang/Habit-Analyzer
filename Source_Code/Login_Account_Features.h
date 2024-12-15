@@ -563,7 +563,6 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
             cout << "Unable";
             exit(0);
         }
-        individual_task << "Day Count" << "," << 0;
         individual_task.close();
        A.play_sound_progress_bar("Audio\\Add.wav", "Adding " + (new_task) + " Task...", LA.return_user_id());
      return 1;
@@ -759,6 +758,7 @@ string Login_Account_Features:: user_journal_menu_list(string array[], int num)
 int Login_Account_Features::task_status_report(Login_Account& LA, Audio& A)
 {
     string task_status_menu[2] = { "Graphical Status Report", "Non Graphical Status Report"};
+    back_status_report:  // label to back to status menu;
     user_journal_list_slection = user_journal_menu_list(task_status_menu, 2);
 if (user_journal_list_slection == "eight")
 {
@@ -840,8 +840,11 @@ else if(user_journal_list_slection == "Graphical Status Report")
     string report_menu[5] = { "One Month", "Three Month", "Six Month", "One Year", "Till Date" };
     user_journal_list_slection = user_journal_menu_list(report_menu, 5);
     int bar_height[menu_list_counter];
-
-    if (user_journal_list_slection == "One Month") 
+    if(user_journal_list_slection == "eight")
+    {
+        goto back_status_report;
+    }
+    else if (user_journal_list_slection == "One Month") 
     {
         temp_counter = 30;
     } 
@@ -994,6 +997,11 @@ else
         loop_counter++;  // Increment the count
     }
     user_journal_list_slection = user_journal_menu_list(array_of_task, menu_list_counter);
+
+    if(user_journal_list_slection == "eight")
+    {
+        goto back_status_report;  // sending back to status menu;
+    }
 
     LA.temp.clear();
     LA.temp = LA.user_id_2 + "\\" + "Task_List" +"\\" + user_journal_list_slection + ".csv";
