@@ -254,7 +254,7 @@ int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A)
                 individual_file_pointer.close();
                 file_opener.clear();
                 file_opener = file_opener + LA.user_id_2 + "\\Task_List\\" + user_journal_list_slection + ".csv";
-                individual_file_pointer.open(file_opener.c_str(), ios::out | ios::trunc);
+                individual_file_pointer.open(file_opener.c_str(), ios::app );
                 if(!individual_file_pointer)
                 {
                     system("cls");
@@ -265,7 +265,7 @@ int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A)
                 {
                     if(i == num_zero - 1)
                     {
-                        individual_file_pointer << system_time << "," << "Done";
+                        individual_file_pointer << system_time << "," << "Done"<< endl;
                         break;
                     }
                     individual_file_pointer  << array_individual[i] << endl;
@@ -557,7 +557,8 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
     }
     LA.temp.clear();
        LA.temp = LA.temp + LA.user_id_2 + "\\Task_List\\" + new_task + ".csv";
-        fstream individual_task(LA.temp.c_str(), ios::out);
+        fstream individual_task;
+        individual_task.open( LA.temp.c_str() ,ios::app);
         if(!individual_task)
         {
             cout << "Unable";
@@ -1015,7 +1016,12 @@ else
         Sleep(1500);
         return 0;
     }
-    num_zero = 1;
+    num_zero = 0;
+    stringstream ts;
+    system("cls");
+    gotoxy(40, 10);
+    cout << "|_S.N|______Date_____|__Status__|" << endl;
+     getline(task_status, LA.temp); // discarding blank spaces
     while(task_status)
     {
         if(task_status.eof() != 0)
@@ -1023,9 +1029,30 @@ else
             break;
         }
         getline(task_status, LA.temp);
-        cout << "\t\t\t" << num_zero << ": " << LA.temp << "\n\n";
-        num_zero ++;
+        ts.clear();
+        ts = stringstream(LA.temp);  // way to assign string to string stream;
+        getline(ts, LA.temp, ',');
+        gotoxy(40, 10 + num_zero*2 + 1);
+        cout << "_________________________________" << endl;
 
+        gotoxy(40, 10 + num_zero*2 + 2);
+        cout << "|";
+        cout.width(4);
+        cout << (num_zero +1 )  << "|";
+
+        cout.setf(ios::right, ios::adjustfield);
+        cout.width(15);
+        cout << LA.temp << "|";
+
+        getline(ts, LA.temp, ',');
+        cout.setf(ios::right, ios::adjustfield);
+        cout.width(10);
+        cout << LA.temp << "|" << endl;
+
+        gotoxy(40, 10 + num_zero*2 + 3);
+        cout << "_________________________________" << endl;
+
+        num_zero ++;
     }
     num_zero = 0;
     task_status.close();
@@ -1036,10 +1063,9 @@ else
         key = _getch();
 
     } while (key != 8);
-    cout << "\n\n\t\t\t\t\tEnter Backspace Key to Return";
     cout << "\e[?25h"; // Restore cursor visibility
+    system("cls");
     return 0;
-    
 }
 }
 int Login_Account_Features:: delete_account(Login_Account& LA, Audio& A)
@@ -1092,7 +1118,7 @@ int Login_Account_Features:: delete_account(Login_Account& LA, Audio& A)
     LA.temp = LA.temp + "rmdir /S /Q " + LA.user_id_2 ;
     system(LA.temp.c_str());
     LA.decrypt(LA.user_id_2);
-    A.play_sound_progress_bar("Audio\\Error_2.wav", "Deleting "+ (LA.user_id_2) + " Account...", LA.return_user_id());
+    A.play_sound_progress_bar("Audio\\Error_2.wav", "Deleting "+ (LA.user_id_2) + " Account...", "Default");
     return 1;
 }
 int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
@@ -1351,7 +1377,9 @@ int Login_Account_Features::delete_create_date(Login_Account& LA, int new_task_n
 }
 void Login_Account_Features:: sound_file(Login_Account& LA, Audio& A)
     {
-        LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_sound.txt";
+        LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_sound.csv";
+        cout << LA.temp << endl;
+        Sleep(3000);
         fstream sound_status;
         sound_status.open(LA.temp.c_str(), ios::in);
         if (!sound_status) 

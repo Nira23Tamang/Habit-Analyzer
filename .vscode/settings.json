@@ -1,5 +1,5 @@
 {
-  "workbench.colorTheme": "Default High Contrast Light",
+  "workbench.colorTheme": "Visual Studio Dark - C++",
   "code-runner.clearPreviousOutput": true,
   "code-runner.saveFileBeforeRun": true,
   "terminal.integrated.profiles.windows": {

@@ -38,7 +38,7 @@ void Audio:: play_sound_only( string mp3, string user_id_name)
     else 
     {
         
-        temp_file = user_id_name + "\\" + user_id_name + "_sound.txt";
+        temp_file = user_id_name + "\\" + user_id_name + "_sound.csv";
         fstream mysound3(temp_file.c_str(), ios::in);
         if(!mysound3)
         {
@@ -86,7 +86,7 @@ void Audio:: play_sound_progress_bar( string mp3, string message, string user_id
     else 
     {
         
-        temp_file = user_id_name + "\\" + user_id_name + "_sound.txt";
+        temp_file = user_id_name + "\\" + user_id_name + "_sound.csv";
         fstream mysound2(temp_file.c_str(), ios::in);
         if(!mysound2)
         {

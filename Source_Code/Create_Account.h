@@ -43,14 +43,7 @@ class Create_Account : public Password_Security, public Encryption_and_Decryptio
     // Function to check whether all file opened or not
     static int account_check();
     // Function to open user sound setting file
-    int sound_setting()
-    {
-        encrypt(User_ID);
-         temp_2[4].clear(); 
-         temp_2[4] = temp_2[4] + User_ID + "\\" + User_ID + "_sound.txt";
-          decrypt(User_ID);
-         return 1;
-    }
+    int sound_setting();
     ~Create_Account(){ }// Create Account Destructor
 };
 
@@ -313,5 +306,13 @@ int Create_Account:: account_check()
         return 0;
     }
 }
+int Create_Account:: sound_setting()
+    {
+        encrypt(User_ID);
+         temp_2[4].clear(); 
+         temp_2[4] = temp_2[4] + User_ID + "\\" + User_ID + "_sound.csv";
+          decrypt(User_ID);
+         return 1;
+    }
 
 #endif  // end of declaration

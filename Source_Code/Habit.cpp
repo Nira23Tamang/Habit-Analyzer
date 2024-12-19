@@ -8,7 +8,7 @@
 #include "Login_Account_Features.h"
 
 using namespace std;
-
+ 
 int main()
 {
     system("cls");
@@ -25,7 +25,7 @@ int main()
      {
         case 1:
         {
-            
+            login: // after signing in, user will redirect here
             system("cls"); // Consider replacing with a cross-platform solution
             int password_counter = 0;
             Login_Account LA;
@@ -266,6 +266,7 @@ int main()
             
         }
         break;
+
         case 3:
         {
             A.play_sound_progress_bar("Audio\\Report.wav", "Exiting...","Default");
@@ -279,6 +280,7 @@ int main()
             return 0;
         }
      }
+     goto login;  /// label for transfering to login section after creating account
    }
 
     return 0;
