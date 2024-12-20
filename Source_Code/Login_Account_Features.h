@@ -407,6 +407,7 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
             LA.compare += 1;
             if(LA.compare <= 5)
             {
+                system("Color 0E");
                 cout << endl << LA.compare << ". Habitual Task: ";
             }
             else
@@ -416,8 +417,8 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
                 return 0;
             }
             
-            
             cin >> new_task;
+            system("Color 07");
             b1 = check_length(new_task);
             
             if (b1 == false) 
@@ -461,9 +462,10 @@ int Login_Account_Features::add_new_task(Login_Account& LA, Audio& A)
             
                 if(LA.compare <= 5)
                 {
+                    system("Color 0E");
                     cout << "\n " << (LA.compare) << ". Habitual Task: ";
-                    
                     cin >> new_task;
+                    system("Color 07");
                     b1 = check_length(new_task);
                     
                     if (b1 == false) 
@@ -704,17 +706,21 @@ string Login_Account_Features:: user_journal_menu_list(string array[], int num)
     while (1) {
         int X_coordinates = 60;
         int Y_coordinates = 10;
-
-        for (int i = 0; i < num; i++) 
+        gotoxy(60, 8);
+        system("Color 0E"); 
+        cout << "Enter Backspace Key to Return";
+        for ( loop_counter = 0; loop_counter < num; loop_counter++) 
         {
-            gotoxy(X_coordinates, Y_coordinates + (i * 2));
-            setColor(Set[i]);
-            cout << (i + 1) << ". "<< array[i];
+            gotoxy(X_coordinates, Y_coordinates + (loop_counter * 2));
+            setColor(Set[loop_counter]);
+            cout << (loop_counter + 1) << ". "<< array[loop_counter];
         }
-
+       
         key = _getch();  // Get user input
 
-        if (key == 72 || key == 80) {  // Arrow keys: 72 (up), 80 (down)
+        if (key == 72 || key == 80) 
+        {  // Arrow keys: 72 (up), 80 (down)
+        
             if (key == 80 && counter < num) 
             {
                 counter++;
@@ -733,8 +739,7 @@ string Login_Account_Features:: user_journal_menu_list(string array[], int num)
             return array[temp_counter - 1];
         } 
         else if (key == 8) 
-        {  // Backspace
-            //system("cls");
+        {  
             return "eight";
         } 
         else 
@@ -1378,8 +1383,6 @@ int Login_Account_Features::delete_create_date(Login_Account& LA, int new_task_n
 void Login_Account_Features:: sound_file(Login_Account& LA, Audio& A)
     {
         LA.temp = LA.user_id_2 + "\\" + LA.user_id_2 + "_sound.csv";
-        cout << LA.temp << endl;
-        Sleep(3000);
         fstream sound_status;
         sound_status.open(LA.temp.c_str(), ios::in);
         if (!sound_status) 

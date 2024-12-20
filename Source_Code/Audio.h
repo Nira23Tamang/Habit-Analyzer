@@ -63,6 +63,7 @@ void Audio:: play_sound_only( string mp3, string user_id_name)
 void Audio:: play_sound_progress_bar( string mp3, string message, string user_id_name)
 {
     system("cls");
+    system("Color 05"); 
        // Initialize char for printing loading bar
     char a = 177, b = 219;
     cout << "\n\n\n\n";
@@ -93,6 +94,7 @@ void Audio:: play_sound_progress_bar( string mp3, string message, string user_id
             system("cls");
             cout << "\nUnable to open sound file\n";
             Sleep(2000);
+            system("Color 07");
             exit(0);
         }
         mysound2 >> temp_setting;
@@ -109,6 +111,7 @@ void Audio:: play_sound_progress_bar( string mp3, string message, string user_id
                 cout << b;  
                 Sleep(16);
             }
+            system("Color 07");
             system("cls");
 }
 #endif // end of declaration
