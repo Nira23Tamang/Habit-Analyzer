@@ -36,7 +36,6 @@ int menu_key_movement()
      static int counter = 0;
      static int backspace_counter = 0;
      static char key;
-
      printf("\e[?25l"); // Hide curosr blinking
 	 while(1)
 	 {

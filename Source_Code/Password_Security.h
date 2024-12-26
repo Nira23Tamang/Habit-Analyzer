@@ -87,6 +87,6 @@ bool Password_Security:: security()
             }
         }
 
-        return false;
+        return true;
 }
 #endif // end of definition

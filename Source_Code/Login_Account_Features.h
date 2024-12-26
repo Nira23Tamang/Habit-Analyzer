@@ -9,6 +9,7 @@ class Login_Account_Features : public Login_Account, public System_Time
  protected:
     int menu_list_counter = 0, loop_counter = 0, loop_counter_2 = 0, num_zero = 0, temp_counter = 0;  // for counting loop and number of zeros
     string system_time, file_time, user_journal_list_slection, file_opener;
+    double double_temp;
     char key;
 
  public:
@@ -92,13 +93,14 @@ int Login_Account_Features::report_graph(int heights[], string labels[], int num
     outtextxy(65, 45, "Y");
     outtextxy(590, 415, "X");
     outtextxy(40, 420, "O");  // Origin
-
+    int barX1;
+    int barX2;
     // Draw bars and labels
     setfillstyle(LTBKSLASH_FILL, WHITE);  // Bar fill pattern and color
     for (int i = 0; i < numBars; i++)
     {
-        int barX1 = 100 + i * 100;  // Starting X position of each bar
-        int barX2 = barX1 + 50;     // Ending X position (width of 50)
+       barX1  = 100 + i * 100;  // Starting X position of each bar
+       barX2  = barX1 + 50;     // Ending X position (width of 50)
 
         // Draw the 3D bar with height from the `heights` array
         bar3d(barX1, heights[i], barX2, 410, 15, 1);
@@ -200,6 +202,7 @@ int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A)
             loop_counter++;
         }
         // show menu of above new array
+        system("cls");
         user_journal_list_slection = user_journal_menu_list(array_of_task_2, loop_counter_2);
         if (user_journal_list_slection == "eight") 
         {
@@ -295,6 +298,7 @@ int Login_Account_Features:: update_journal_status(Login_Account& LA, Audio& A)
                 array_of_task[loop_counter] = LA.name;  // Store token in the array
                 loop_counter++;  // Increment the count
             }
+            system("cls");
             user_journal_list_slection = user_journal_menu_list(array_of_task, menu_list_counter);
             if (user_journal_list_slection == "eight") 
             {
@@ -746,12 +750,15 @@ string Login_Account_Features:: user_journal_menu_list(string array[], int num)
         {
             ;
         }
-
-        // Reset all options to default color
-        for (int i = 0; i < num; i++) 
+        if(counter < num || counter > 1)
         {
-            Set[i] = DEFAULT_COLOR;
+            // Reset all options to default color
+            for (int i = 0; i < num; i++) 
+            {
+                Set[i] = DEFAULT_COLOR;
+            }
         }
+        
 
         // Highlight the selected option
         if (counter > 0) 
@@ -940,12 +947,8 @@ else if(user_journal_list_slection == "Graphical Status Report")
 
         for (int i = 0; i < menu_list_counter; i++) 
         {
-            bar_height[i] = 500 - ((bar_height[i] * 500) / temp_counter) + 100;
-
-            if (bar_height[i] > 410) 
-            {
-                bar_height[i] = 410;
-            }
+            double_temp = (double(bar_height[i]) / temp_counter) * 100;
+            bar_height[i] = 410 - int( (double_temp * 310 / 100));
         }
     } 
     else 
@@ -1002,6 +1005,7 @@ else
         array_of_task[loop_counter] = LA.name;  // Store token in the array
         loop_counter++;  // Increment the count
     }
+    system("cls");
     user_journal_list_slection = user_journal_menu_list(array_of_task, menu_list_counter);
 
     if(user_journal_list_slection == "eight")
@@ -1061,7 +1065,7 @@ else
     }
     num_zero = 0;
     task_status.close();
-    cout << "\t\t\t\t\tEnter Backspace Key to Return";
+    cout << "\n\n\t\t\t\t\tEnter Backspace Key to Return";
     cout << "\e[?25l" ; // Hide curosr blinking
     do
     {
@@ -1179,6 +1183,7 @@ int Login_Account_Features::delete_user_task(Login_Account& LA, Audio& A)
 
     if (user_journal_list_slection == "eight")
     {
+        system("cls");
         return 0;
     }
     else
@@ -1420,7 +1425,7 @@ void Login_Account_Features:: sound_file(Login_Account& LA, Audio& A)
         }
         else
         {
-
+            system("cls");
         }
     }
 #endif // end of declaration
